@@ -270,79 +270,48 @@ private doSaveStatus(status: TicketStatus) {
 }
 
   assignTech() {
-    this.successMsg = '';
-    this.errorMsg = '';
+  this.successMsg = '';
+  this.errorMsg = '';
 
-    if (this.isDone) {
-      this.errorMsg = 'Este ticket já está CONCLUÍDO (DONE) e não pode ser atribuído.';
-      return;
-    }
-
-    const ctrl = this.form.get('techId');
-    ctrl?.markAsTouched();
-    ctrl?.updateValueAndValidity();
-
-    if (ctrl?.invalid) {
-      this.errorMsg = 'Selecione um técnico.';
-      return;
-    }
-
-    const techId = String(this.form.value.techId ?? '').trim();
-    if (!techId) {
-      this.errorMsg = 'Selecione um técnico.';
-      return;
-    }
-
-    
-    if (this.currentTechId() && this.currentTechId() === techId) {
-      this.successMsg = 'Este ticket já está atribuído para esse técnico.';
-    
-      ctrl?.markAsPristine();
-      ctrl?.markAsUntouched();
-      return;
-    }
-
-    this.assignSub?.unsubscribe();
-
-    this.assigning = true;
-    this.cdr.markForCheck();
-
-    this.assignSub = this.ticketService
-      .assign(this.ticketId, techId)
-      .pipe(
-        take(1),
-        finalize(() => {
-          this.zone.run(() => {
-            this.assigning = false;
-            this.cdr.markForCheck();
-          });
-        })
-      )
-      .subscribe({
-        next: () => {
-          this.zone.run(() => {
-            this.successMsg = 'Ticket atribuído com sucesso.';
-
-            // ✅ NÃO limpa o select
-            // só remove o “vermelho” e deixa o usuário vendo o escolhido
-            const c = this.form.get('techId');
-            c?.markAsPristine();
-            c?.markAsUntouched();
-
-            // recarrega ticket pra refletir responsável
-            this.loadTicket();
-            this.cdr.markForCheck();
-          });
-        },
-        error: (err) => {
-          this.zone.run(() => {
-            this.errorMsg =
-              err?.error?.message || 'Não foi possível atribuir o ticket.';
-            this.cdr.markForCheck();
-          });
-        },
-      });
+  if (this.isDone) {
+    this.errorMsg = 'Este ticket já está CONCLUÍDO (DONE) e não pode ser atribuído.';
+    return;
   }
+
+  const ctrl = this.form.get('techId');
+  ctrl?.markAsTouched();
+  ctrl?.updateValueAndValidity();
+
+  if (ctrl?.invalid) {
+    this.errorMsg = 'Selecione um técnico.';
+    return;
+  }
+
+  const techId = String(this.form.value.techId ?? '').trim();
+  if (!techId) {
+    this.errorMsg = 'Selecione um técnico.';
+    return;
+  }
+
+  
+  if (this.currentTechId() && this.currentTechId() === techId) {
+    this.successMsg = 'Este ticket já está atribuído para esse técnico.';
+    ctrl?.markAsPristine();
+    ctrl?.markAsUntouched();
+    return;
+  }
+
+  
+  const tech = this.techUsers.find(u => u.id === techId);
+  const techLabel = tech ? `${tech.name} (${tech.email})` : techId;
+
+  
+  this.openConfirm(
+    'Confirmar atribuição',
+    `Deseja atribuir este ticket para: ${techLabel}?`,
+    () => this.doAssignTech(techId)
+  );
+}
 
   back() {
     this.router.navigate(['/home/tickets']);
@@ -365,5 +334,55 @@ confirmNo() {
   this.confirmOpen = false;
   this.confirmAction = null;
 }
+
+private doAssignTech(techId: string) {
+  this.assignSub?.unsubscribe();
+
+  this.assigning = true;
+  this.cdr.markForCheck();
+
+  this.assignSub = this.ticketService
+    .assign(this.ticketId, techId)
+    .pipe(
+      take(1),
+      finalize(() => {
+        this.zone.run(() => {
+          this.assigning = false;
+          this.cdr.markForCheck();
+        });
+      })
+    )
+    .subscribe({
+      next: () => {
+        this.zone.run(() => {
+          this.successMsg = 'Ticket atribuído com sucesso.';
+
+          const c = this.form.get('techId');
+          c?.markAsPristine();
+          c?.markAsUntouched();
+
+          this.loadTicket();
+          this.cdr.markForCheck();
+        });
+      },
+      error: (err) => {
+        this.zone.run(() => {
+          this.errorMsg = err?.error?.message || 'Não foi possível atribuir o ticket.';
+          this.cdr.markForCheck();
+        });
+      },
+    });
+}
+
+get statusUnchanged(): boolean {
+  return !!this.ticket && this.form.value.status === (this.ticket.status as TicketStatus);
+}
+
+get techUnchanged(): boolean {
+  const current = this.currentTechId();
+  const selected = String(this.form.value.techId ?? '');
+  return !!current && !!selected && current === selected;
+}
+
 }
 

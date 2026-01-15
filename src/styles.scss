@@ -1,8 +1,8 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 
-/* =========================
-   AUTH (login / register)
-========================= */
+
+
 .auth-card {
   background: #fff3d6;
   border: 1px solid #e3c27d;
@@ -47,18 +47,14 @@
   color: #b00020;
 }
 
-/* =========================
-   LAYOUT BASE
-========================= */
+
 .sb-nav-fixed {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* =========================
-   TOP NAV (FIXA)
-========================= */
+
 .sb-topnav {
   position: fixed;
   top: 0;
@@ -74,18 +70,14 @@
   font-weight: 600;
 }
 
-/* =========================
-   WRAPPER SIDEBAR + CONTENT
-========================= */
+
 #layoutSidenav {
   display: flex;
   flex: 1;
-  padding-top: 56px; /* espaço da topbar */
+  padding-top: 56px; 
 }
 
-/* =========================
-   SIDEBAR FIXA
-========================= */
+
 #layoutSidenav_nav {
   position: fixed;
   top: 56px;
@@ -98,9 +90,8 @@
   z-index: 1050;
 }
 
-/* =========================
-   CONTEÚDO
-========================= */
+
+
 #layoutSidenav_content {
   margin-left: 225px;
   flex: 1;
@@ -111,14 +102,14 @@
   min-width: 0;
 }
 
-/* MAIN */
+
 .content {
   flex: 1;
   padding: 18px 22px;
   min-width: 0;
 }
 
-/* remove container central do bootstrap */
+
 #layoutSidenav_content .container,
 #layoutSidenav_content .container-fluid {
   max-width: none !important;
@@ -127,9 +118,7 @@
   padding-right: 0 !important;
 }
 
-/* =========================
-   SIDENAV
-========================= */
+
 .sb-sidenav {
   display: flex;
   flex-direction: column;
@@ -157,7 +146,7 @@
   letter-spacing: 0.06em;
 }
 
-/* LINKS */
+
 .nav-link {
   display: flex;
   align-items: center;
@@ -178,7 +167,7 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* SIDEBAR FOOTER */
+
 .sb-sidenav-footer {
   padding: 0.75rem;
   background-color: #343a40;
@@ -186,9 +175,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* =========================
-   FOOTER APP
-========================= */
+
 .app-footer {
   background: #f8f9fa;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
@@ -202,9 +189,7 @@
   font-size: 12px;
 }
 
-/* =========================
-   TOGGLE SIDEBAR
-========================= */
+
 body.sb-sidenav-toggled #layoutSidenav_nav {
   transform: translateX(-225px);
 }
@@ -212,23 +197,42 @@ body.sb-sidenav-toggled #layoutSidenav_nav {
 body.sb-sidenav-toggled #layoutSidenav_content {
   margin-left: 0;
 }
-/* =========================
-   RESPONSIVO — NÃO ESCONDER SIDEBAR AUTOMATICAMENTE
-========================= */
+
+
 @media (max-width: 992px) {
   #layoutSidenav_nav {
-    transform: translateX(0);   /* 🔥 mantém visível */
+    display: block !important;
+    position: fixed;
+    left: 0;
+    top: 56px; 
+    width: 225px;
+    height: calc(100vh - 56px);
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    z-index: 1040;
   }
 
   #layoutSidenav_content {
-    margin-left: 225px;         /* 🔥 mantém espaço da sidebar */
+    margin-left: 0 !important;
   }
 
   body.sb-sidenav-toggled #layoutSidenav_nav {
-    transform: translateX(-225px); /* só fecha se clicar */
+    transform: translateX(0);
   }
 
-  body.sb-sidenav-toggled #layoutSidenav_content {
-    margin-left: 0;
+  body.sb-sidenav-toggled::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 56px;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 1030;
+  }
+
+  body.sb-sidenav-toggled {
+    overflow: hidden;
   }
 }
+

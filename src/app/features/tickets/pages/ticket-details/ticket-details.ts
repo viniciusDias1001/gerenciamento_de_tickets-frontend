@@ -20,20 +20,23 @@ export class TicketDetailsComponent implements OnInit {
   loading = false;
   errorMsg = '';
   ticket: any = null;
+  canManage = false;
 
   ngOnInit() {
     console.log('[TicketDetails] ngOnInit START');
 
-    // loga mudanças de rota também
+    
     this.route.paramMap.subscribe((pm) => {
       const id = pm.get('id');
       console.log('[TicketDetails] paramMap mudou', { id, url: location.href });
       if (id) this.load(id);
     });
 
-    // snapshot (só pra comparar)
+   
     const snapId = this.route.snapshot.paramMap.get('id');
     console.log('[TicketDetails] snapshot id', snapId);
+
+    this.canManage = true;
   }
 
   load(id: string) {
@@ -85,4 +88,21 @@ export class TicketDetailsComponent implements OnInit {
         },
       });
   }
+
+  statusLabel(s: string) {
+  if (s === 'OPEN') return 'Aberto';
+  if (s === 'IN_PROGRESS') return 'Em andamento';
+  return 'Concluído';
+}
+
+priorityLabel(p: string) {
+  if (p === 'LOW') return 'Baixa';
+  if (p === 'MEDIUM') return 'Média';
+  return 'Alta';
+}
+
+copyId() {
+  if (!this.ticket?.id) return;
+  navigator.clipboard?.writeText(String(this.ticket.id));
+}
 }

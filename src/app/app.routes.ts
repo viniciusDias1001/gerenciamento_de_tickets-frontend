@@ -20,23 +20,32 @@ export const routes: Routes = [
     ],
   },
 
- 
   {
     path: 'home',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/home/page/home/home').then(m => m.Home),
     children: [
-   
-      { path: '', pathMatch: 'full', redirectTo: 'tickets' },
+      
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
 
       
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/home/page/home-dashboard/home-dashboard')
+            .then(m => m.HomeDashboardComponent),
+      },
+
+      // tickets list
       {
         path: 'tickets',
         loadComponent: () =>
           import('./features/tickets/pages/tickets-list/tickets-list')
             .then(m => m.TicketsList),
       },
+
+      // create
       {
         path: 'tickets/novo',
         canActivate: [clientGuard],
@@ -44,13 +53,35 @@ export const routes: Routes = [
           import('./features/tickets/pages/tickets-create/tickets-create')
             .then(m => m.TicketsCreateComponent),
       },
+
+   
       {
-        path: 'tickets/gerenciar',
+        path: 'tickets/:id/manage',
         canActivate: [techGuard],
         loadComponent: () =>
           import('./features/tickets/pages/tickets-manage/tickets-manage')
             .then(m => m.TicketsManage),
       },
+
+      // history
+      {
+        path: 'tickets/:id/history',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/tickets/pages/ticket-history/ticket-history')
+            .then(m => m.TicketHistoryComponent),
+      },
+
+      // details
+      {
+        path: 'tickets/:id',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/tickets/pages/ticket-details/ticket-details')
+            .then(m => m.TicketDetailsComponent),
+      },
+
+      // users
       {
         path: 'usuarios',
         canActivate: [adminGuard],
@@ -58,29 +89,6 @@ export const routes: Routes = [
           import('./features/users/pages/users-list/users-list')
             .then(m => m.UsersList),
       },
-      {
-       path: 'tickets/:id/manage',
-        canActivate: [techGuard], // TECH ou ADMIN (se teu techGuard já permite admin, perfeito)
-        loadComponent: () =>
-        import('./features/tickets/pages/tickets-manage/tickets-manage')
-        .then(m => m.TicketsManage),
-      },
-      {
-      path: 'tickets/:id/history',
-      canActivate: [authGuard],
-      loadComponent: () =>
-      import('./features/tickets/pages/ticket-history/ticket-history')
-      .then(m => m.TicketHistoryComponent),
-
-      },
-      {
-     path: 'tickets/:id',
-     canActivate: [authGuard],
-     loadComponent: () =>
-    import('./features/tickets/pages/ticket-details/ticket-details')
-      .then(m => m.TicketDetailsComponent),
-},
-      
     ],
   },
 

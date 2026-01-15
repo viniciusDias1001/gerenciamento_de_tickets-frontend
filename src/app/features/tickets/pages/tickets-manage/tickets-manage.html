@@ -3,7 +3,7 @@
 
     <!-- HEADER -->
     <div class="header">
-      <div>
+      <div class="header-text">
         <h1 class="title">Gerenciar Ticket</h1>
         <p class="subtitle">Alterar status e atribuir responsável (TECH/ADMIN)</p>
       </div>
@@ -22,7 +22,8 @@
 
     <!-- DADOS DO TICKET -->
     <div *ngIf="ticket" class="ticket-info">
-      <div class="row">
+
+      <div class="info-grid">
         <div class="box">
           <div class="label">ID</div>
           <div class="value mono">{{ ticket.id }}</div>
@@ -30,12 +31,16 @@
 
         <div class="box">
           <div class="label">Status atual</div>
-          <div class="value">{{ ticket.status }}</div>
+          <div class="value">
+            <span class="pill status">{{ ticket.status }}</span>
+          </div>
         </div>
 
         <div class="box">
           <div class="label">Prioridade</div>
-          <div class="value">{{ ticket.priority }}</div>
+          <div class="value">
+            <span class="pill priority">{{ ticket.priority }}</span>
+          </div>
         </div>
       </div>
 
@@ -61,12 +66,20 @@
     <form [formGroup]="form" class="actions-grid">
 
       <!-- STATUS -->
-      <div class="action-card">
-        <h2>Status</h2>
+      <section class="action-card">
+        <div class="action-head">
+          <h2>Status</h2>
+          <span class="badge-soft" *ngIf="isDone">Ticket concluído</span>
+        </div>
+
         <p class="hint">Selecione o novo status do ticket.</p>
 
-        <label>Novo status</label>
-        <select class="form-control" formControlName="status" [disabled]="loading">
+        <label class="field-label">Novo status</label>
+        <select
+          class="form-control"
+          formControlName="status"
+          [disabled]="loading || isDone"
+        >
           <option *ngFor="let s of statusOptions" [value]="s.value">
             {{ s.label }}
           </option>
@@ -76,22 +89,30 @@
           type="button"
           class="btn btn-primary"
           (click)="saveStatus()"
-          [disabled]="savingStatus || loading"
+          [disabled]="savingStatus || loading || isDone || statusUnchanged"
         >
           {{ savingStatus ? 'Salvando...' : 'Salvar status' }}
         </button>
-      </div>
+
+        <small class="muted" *ngIf="statusUnchanged && !isDone">
+          Nenhuma alteração de status para salvar.
+        </small>
+      </section>
 
       <!-- ATRIBUIR -->
-      <div class="action-card">
-        <h2>Atribuir responsável</h2>
+      <section class="action-card">
+        <div class="action-head">
+          <h2>Atribuir responsável</h2>
+          <span class="badge-soft" *ngIf="loadingTechs">Carregando lista</span>
+        </div>
+
         <p class="hint">Selecione um técnico.</p>
 
-        <label>Técnico</label>
+        <label class="field-label">Técnico</label>
         <select
           class="form-control"
           formControlName="techId"
-          [disabled]="loadingTechs || loading"
+          [disabled]="loadingTechs || loading || isDone"
         >
           <option value="">
             {{ loadingTechs ? 'Carregando técnicos...' : 'Selecione um técnico' }}
@@ -102,10 +123,7 @@
           </option>
         </select>
 
-        <small
-          class="error"
-          *ngIf="form.get('techId')?.touched && form.get('techId')?.invalid"
-        >
+        <small class="error" *ngIf="form.get('techId')?.touched && form.get('techId')?.invalid">
           Selecione um técnico.
         </small>
 
@@ -113,11 +131,15 @@
           type="button"
           class="btn btn-success"
           (click)="assignTech()"
-          [disabled]="assigning || loading || loadingTechs"
+          [disabled]="assigning || loading || loadingTechs || isDone || !form.value.techId || techUnchanged"
         >
           {{ assigning ? 'Atribuindo...' : 'Atribuir' }}
         </button>
-      </div>
+
+        <small class="muted" *ngIf="techUnchanged && !isDone">
+          Este ticket já está atribuído para o técnico selecionado.
+        </small>
+      </section>
 
     </form>
 
@@ -128,41 +150,24 @@
 <!-- MODAL DE CONFIRMAÇÃO -->
 <!-- ========================= -->
 
-<div
-  class="modal-backdrop"
-  *ngIf="confirmOpen"
-  (click)="confirmNo()"
-></div>
+<div class="modal-backdrop" *ngIf="confirmOpen" (click)="confirmNo()"></div>
 
-<div
-  class="modal"
-  *ngIf="confirmOpen"
-  role="dialog"
-  aria-modal="true"
->
+<div class="modal" *ngIf="confirmOpen" role="dialog" aria-modal="true">
   <div class="modal-card" (click)="$event.stopPropagation()">
+
     <h3 class="modal-title">{{ confirmTitle }}</h3>
 
-    <p class="modal-text">
-      {{ confirmMessage }}
-    </p>
+    <p class="modal-text">{{ confirmMessage }}</p>
 
     <div class="modal-actions">
-      <button
-        type="button"
-        class="btn btn-outline"
-        (click)="confirmNo()"
-      >
+      <button type="button" class="btn btn-outline" (click)="confirmNo()">
         Cancelar
       </button>
 
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="confirmYes()"
-      >
+      <button type="button" class="btn btn-primary" (click)="confirmYes()">
         Confirmar
       </button>
     </div>
+
   </div>
 </div>

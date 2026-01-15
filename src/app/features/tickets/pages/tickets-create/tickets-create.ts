@@ -1,20 +1,22 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule  } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
 import { TicketService } from '../../../../core/services/ticket.service';
 import { TicketPriority } from '../../../../core/models/ticket.models';
-import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-tickets-create',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './tickets-create.html',
-  styleUrl: './tickets-create.scss'
+  styleUrls: ['./tickets-create.scss'],
 })
 export class TicketsCreateComponent {
   private fb = inject(FormBuilder);
+  private ticketService = inject(TicketService);
+  private router = inject(Router);
+
   loading = false;
   errorMsg = '';
 
@@ -30,14 +32,9 @@ export class TicketsCreateComponent {
     priority: ['MEDIUM' as TicketPriority],
   });
 
-  constructor(
-    private fbr: FormBuilder,
-    private ticketService: TicketService,
-    private router: Router
-  ) {}
-
   submit() {
     this.errorMsg = '';
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -52,11 +49,10 @@ export class TicketsCreateComponent {
     };
 
     this.ticketService.create(payload).subscribe({
-      next: (created) => {
+      next: () => {
         this.router.navigate(['/home/tickets']);
       },
       error: (err) => {
-       
         this.errorMsg =
           err?.error?.message ||
           'Não foi possível criar o ticket. Verifique seus dados e tente novamente.';

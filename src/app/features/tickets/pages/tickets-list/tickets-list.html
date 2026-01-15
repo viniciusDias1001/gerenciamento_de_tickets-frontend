@@ -3,17 +3,17 @@
 
     <div class="header">
       <div>
-        <h1 class="mt-4">Tickets</h1>
+        <h1 class="mt-4">{{ headerTitle }}</h1>
         <ol class="breadcrumb mb-4 custom-breadcrumb">
           <li class="breadcrumb-item active">
-            Lista de tickets (filtros por status/prioridade)
+            {{ headerSubtitle }}
           </li>
         </ol>
       </div>
 
       <div class="header-actions">
-        <a class="btn btn-success" routerLink="/home/tickets/novo">
-          + Novo Ticket
+        <a class="btn btn-success" routerLink="/home/tickets/novo" *ngIf="canCreate">
+          Novo Ticket
         </a>
       </div>
     </div>
@@ -60,6 +60,7 @@
             <button class="btn btn-primary" type="submit" [disabled]="loading">
               Filtrar
             </button>
+
             <button class="btn btn-outline-secondary" type="button" (click)="clearFilters()" [disabled]="loading">
               Limpar
             </button>
@@ -75,27 +76,26 @@
       <div class="card-body">
 
         <div class="table-top">
-          <div *ngIf="page">
-            <span class="muted">
-              Total: <b>{{ page.totalElements }}</b> • Página <b>{{ page.number + 1 }}</b> de <b>{{ page.totalPages }}</b>
-            </span>
+          <div *ngIf="page" class="muted">
+            Total: <b>{{ page.totalElements }}</b>
+            • Página <b>{{ page.number + 1 }}</b> de <b>{{ page.totalPages }}</b>
           </div>
 
           <div class="muted" *ngIf="loading">Carregando...</div>
         </div>
 
-        <div class="table-responsive">
-          <table class="table table-hover align-middle tickets-table" *ngIf="page">
+       
+        <div class="table-responsive desktop-only" *ngIf="page">
+          <table class="table table-hover align-middle tickets-table">
             <thead>
               <tr>
-                <th style="width: 140px;">#</th>
+                <th style="width: 160px;">#</th>
                 <th>Título</th>
                 <th style="width: 140px;">Status</th>
                 <th style="width: 140px;">Prioridade</th>
                 <th style="width: 200px;">Criado por</th>
                 <th style="width: 200px;">Responsável</th>
-                <th style="width: 140px;">Ações</th>
-
+                <th style="width: 170px;">Ações</th>
               </tr>
             </thead>
 
@@ -105,17 +105,17 @@
 
                 <td>
                   <div class="title">
-  <a class="ticket-link" [routerLink]="['/home/tickets', t.id]">
-    {{ t.title }}
-  </a>
-</div>
+                    <a class="ticket-link" [routerLink]="['/home/tickets', t.id]">
+                      {{ t.title }}
+                    </a>
+                  </div>
                   <div class="sub muted">
                     Atualizado: {{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}
                   </div>
                 </td>
 
                 <td>
-                  <span class="badge status"
+                  <span class="badge-pill status"
                         [class.open]="t.status==='OPEN'"
                         [class.progress]="t.status==='IN_PROGRESS'"
                         [class.done]="t.status==='DONE'">
@@ -124,7 +124,7 @@
                 </td>
 
                 <td>
-                  <span class="badge priority"
+                  <span class="badge-pill priority"
                         [class.low]="t.priority==='LOW'"
                         [class.medium]="t.priority==='MEDIUM'"
                         [class.high]="t.priority==='HIGH'">
@@ -132,43 +132,94 @@
                   </span>
                 </td>
 
-                <td class="muted">
-                  {{ t.createdBy.name || '-' }}
+                <td class="muted">{{ t.createdBy.name || '-' }}</td>
+                <td class="muted">{{ t.assignedTo?.name || 'Não atribuído' }}</td>
+
+                <td class="row-actions">
+                  <a class="btn btn-sm btn-outline-secondary"
+                     [routerLink]="['/home/tickets', t.id]">
+                    Ver
+                  </a>
+
+                  <a class="btn btn-sm btn-outline-primary"
+                     *ngIf="isAdmin || isTech"
+                     [routerLink]="['/home/tickets', t.id, 'manage']">
+                    Gerenciar
+                  </a>
+
+                  <button class="btn btn-sm btn-outline-danger"
+                          *ngIf="isAdmin"
+                          (click)="openDeleteConfirm(t)"
+                          [disabled]="loading"
+                          title="Excluir ticket">
+                    Excluir
+                  </button>
                 </td>
-
-                <td class="muted">
-                  {{ t.assignedTo?.name || 'Não atribuído' }}
-                </td>
-
-                          <td>
-  <a
-    class="btn btn-sm btn-outline-primary"
-    [routerLink]="['/home/tickets', t.id, 'manage']"
-  >
-    Gerenciar
-  </a>
-
-    <button
-    id="lixo"
-    class="btn btn-outline-danger btn-sm"
-    *ngIf="isAdmin"
-    (click)="confirmDelete(t)"
-    title="Excluir ticket"
-  >
-    🗑
-  </button>
-  
-</td>
-                
               </tr>
 
               <tr *ngIf="page.content.length === 0">
-                <td colspan="6" class="muted text-center py-4">
+                <td colspan="7" class="muted text-center py-4">
                   Nenhum ticket encontrado com os filtros atuais.
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- MOBILE -->
+        <div class="mobile-only" *ngIf="page">
+          <div class="ticket-card-item" *ngFor="let t of page.content">
+
+            <div class="card-top">
+              <div class="card-title">
+                <a class="ticket-link" [routerLink]="['/home/tickets', t.id]">
+                  {{ t.title }}
+                </a>
+                <div class="sub muted"># {{ t.id }}</div>
+              </div>
+
+              <div class="pill-group">
+                <span class="badge-pill status"
+                      [class.open]="t.status==='OPEN'"
+                      [class.progress]="t.status==='IN_PROGRESS'"
+                      [class.done]="t.status==='DONE'">
+                  {{ statusLabel(t.status) }}
+                </span>
+
+                <span class="badge-pill priority"
+                      [class.low]="t.priority==='LOW'"
+                      [class.medium]="t.priority==='MEDIUM'"
+                      [class.high]="t.priority==='HIGH'">
+                  {{ priorityLabel(t.priority) }}
+                </span>
+              </div>
+            </div>
+
+            <div class="card-meta">
+              <div class="muted">Criado por: <b>{{ t.createdBy.name || '-' }}</b></div>
+              <div class="muted">Resp.: <b>{{ t.assignedTo?.name || 'Não atribuído' }}</b></div>
+              <div class="muted">Atualizado: <b>{{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}</b></div>
+            </div>
+
+            <div class="card-actions">
+              <a class="btn btn-outline-secondary" [routerLink]="['/home/tickets', t.id]">Ver</a>
+
+              <a class="btn btn-outline-primary" *ngIf="isAdmin || isTech"
+                 [routerLink]="['/home/tickets', t.id, 'manage']">
+                Gerenciar
+              </a>
+
+              <button class="btn btn-outline-danger" *ngIf="isAdmin"
+                      (click)="openDeleteConfirm(t)" [disabled]="loading">
+                Excluir
+              </button>
+            </div>
+
+          </div>
+
+          <div class="muted text-center py-4" *ngIf="page.content.length === 0">
+            Nenhum ticket encontrado com os filtros atuais.
+          </div>
         </div>
 
         <div class="pagination" *ngIf="page">
@@ -184,5 +235,20 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+
+<div class="modal-backdrop" *ngIf="confirmOpen" (click)="confirmNo()"></div>
+
+<div class="modal" *ngIf="confirmOpen" role="dialog" aria-modal="true">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <h3 class="modal-title">{{ confirmTitle }}</h3>
+    <p class="modal-text">{{ confirmMessage }}</p>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline-secondary" (click)="confirmNo()">Cancelar</button>
+      <button type="button" class="btn btn-danger" (click)="confirmYes()">Excluir</button>
+    </div>
   </div>
 </div>

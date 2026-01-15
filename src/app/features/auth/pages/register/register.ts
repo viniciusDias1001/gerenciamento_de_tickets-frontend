@@ -4,16 +4,19 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth';
 
+type Role = 'CLIENT' | 'TECH';
+
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
-  styleUrl: './register.scss',
+  styleUrls: ['../register/register.scss'], 
 })
 export class Register {
   loading = false;
   errorMsg = '';
+  showPass = false;
 
   form;
 
@@ -22,28 +25,47 @@ export class Register {
     private auth: AuthService,
     private router: Router
   ) {
-    this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(4)]],
-      role: ['CLIENT'],
-    });
+    this.form = this.fb.group(
+      {
+        name: ['', [Validators.required, Validators.minLength(2)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(4)]],
+        confirmPassword: ['', [Validators.required]],
+        role: ['CLIENT' as Role],
+      },
+      { validators: [this.passwordMatchValidator] }
+    );
+  }
+
+  togglePass() {
+    this.showPass = !this.showPass;
+  }
+
+  private passwordMatchValidator(group: any) {
+    const pass = group.get('password')?.value;
+    const confirm = group.get('confirmPassword')?.value;
+    return pass === confirm ? null : { passwordMismatch: true };
   }
 
   submit() {
     this.errorMsg = '';
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    this.form.markAllAsTouched();
 
-
-      return;
-    }
+    if (this.form.invalid) return;
 
     this.loading = true;
-    this.auth.register(this.form.getRawValue() as any).subscribe({
+
+    const payload = {
+      name: this.form.value.name,
+      email: this.form.value.email,
+      password: this.form.value.password,
+      role: this.form.value.role,
+    };
+
+    this.auth.register(payload as any).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/auth/login'); // <-- rota correta
       },
       error: (err) => {
         this.loading = false;

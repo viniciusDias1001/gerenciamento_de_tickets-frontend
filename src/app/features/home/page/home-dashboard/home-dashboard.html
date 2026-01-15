@@ -1,0 +1,76 @@
+<div class="dash-page">
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-title">Visão geral</h1>
+      <p class="dash-subtitle">Resumo rápido do seu painel de tickets.</p>
+    </div>
+
+    <div class="dash-actions">
+      <a class="btn btn-success" routerLink="/home/tickets/novo">Novo Ticket</a>
+      <a class="btn btn-outline-secondary" routerLink="/home/tickets">Ver tickets</a>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <div class="kpis" *ngIf="!loading">
+    <div class="kpi">
+      <div class="kpi-label">Total</div>
+      <div class="kpi-value">{{ total }}</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-label">Abertos</div>
+      <div class="kpi-value">{{ open }}</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-label">Em andamento</div>
+      <div class="kpi-value">{{ inProgress }}</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-label">Concluídos</div>
+      <div class="kpi-value">{{ done }}</div>
+    </div>
+  </div>
+
+  <div class="card last-card">
+    <div class="card-body">
+      <div class="last-top">
+        <div class="last-title">Últimos tickets</div>
+        <div class="muted" *ngIf="loading">Carregando...</div>
+      </div>
+
+      <div class="last-list" *ngIf="!loading">
+        <a class="last-item" *ngFor="let t of lastTickets" [routerLink]="['/home/tickets', t.id]">
+          <div class="left">
+            <div class="t-title">{{ t.title }}</div>
+            <div class="muted small">Atualizado: {{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+
+          <div class="right">
+            <span class="pill status"
+              [class.open]="t.status==='OPEN'"
+              [class.progress]="t.status==='IN_PROGRESS'"
+              [class.done]="t.status==='DONE'">
+              {{ statusLabel(t.status) }}
+            </span>
+
+            <span class="pill priority"
+              [class.low]="t.priority==='LOW'"
+              [class.medium]="t.priority==='MEDIUM'"
+              [class.high]="t.priority==='HIGH'">
+              {{ priorityLabel(t.priority) }}
+            </span>
+          </div>
+        </a>
+
+        <div class="muted text-center py-3" *ngIf="lastTickets.length === 0">
+          Nenhum ticket encontrado.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

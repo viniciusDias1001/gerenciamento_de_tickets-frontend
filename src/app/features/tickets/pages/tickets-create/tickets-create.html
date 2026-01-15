@@ -1,61 +1,80 @@
 <div class="ticket-page">
-
   <div class="ticket-card">
-    <h1 class="page-title">Novo Ticket</h1>
-    <p class="page-subtitle">
-      Preencha as informações abaixo para abrir um chamado
-    </p>
+
+    <div class="header">
+      <div>
+        <h1 class="page-title">Novo Ticket</h1>
+        <p class="page-subtitle">Preencha as informações abaixo para abrir um chamado.</p>
+      </div>
+
+      <a class="btn btn-outline-secondary" routerLink="/home/tickets">
+        Voltar
+      </a>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
 
       <div class="form-row">
         <div class="form-group">
-          <label>Título *</label>
+          <label>Título <span class="req">*</span></label>
           <input
             type="text"
             class="form-control"
             formControlName="title"
             placeholder="Ex: Não consigo acessar o sistema"
           />
-          <small class="error" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
-            Informe um título válido.
-          </small>
+          <div class="help-row">
+            <small class="error" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
+              Informe um título válido (3 a 120 caracteres).
+            </small>
+            <small class="muted counter">
+              {{ (form.value.title?.length || 0) }}/120
+            </small>
+          </div>
         </div>
 
         <div class="form-group">
           <label>Prioridade</label>
           <select class="form-control" formControlName="priority">
-            <option value="LOW">Baixa</option>
-            <option value="MEDIUM">Média</option>
-            <option value="HIGH">Alta</option>
+            <option *ngFor="let p of priorities" [ngValue]="p.value">
+              {{ p.label }}
+            </option>
           </select>
+          <small class="muted">Use “Alta” se o problema impede o trabalho.</small>
         </div>
       </div>
 
       <div class="form-group">
-        <label>Descrição *</label>
+        <label>Descrição <span class="req">*</span></label>
         <textarea
-          rows="5"
+          rows="6"
           class="form-control"
           formControlName="description"
           placeholder="Descreva o problema com detalhes..."
         ></textarea>
-        <small class="error" *ngIf="form.get('description')?.touched && form.get('description')?.invalid">
-          Informe uma descrição válida (mín. 10 caracteres).
-        </small>
+
+        <div class="help-row">
+          <small class="error" *ngIf="form.get('description')?.touched && form.get('description')?.invalid">
+            Informe uma descrição válida (mín. 10 caracteres).
+          </small>
+          <small class="muted counter">
+            {{ (form.value.description?.length || 0) }}/2000
+          </small>
+        </div>
       </div>
 
       <div class="actions">
-        <button type="submit" class="btn btn-success" [disabled]="loading || form.invalid">
-          Salvar Ticket
+        <button type="button" class="btn btn-outline-secondary" routerLink="/home/tickets" [disabled]="loading">
+          Cancelar
         </button>
 
-        <button type="button" routerLink="/home/tickets" class="btn btn-warning">
-          Voltar
+        <button type="submit" class="btn btn-success" [disabled]="loading || form.invalid">
+          {{ loading ? 'Salvando...' : 'Salvar Ticket' }}
         </button>
       </div>
 
     </form>
   </div>
-
 </div>

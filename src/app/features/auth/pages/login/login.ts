@@ -16,6 +16,8 @@ export class Login {
   loading = false;
   errorMsg = '';
   form;
+  showPass = false;
+capsOn = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,6 +30,12 @@ export class Login {
       password: ['', [Validators.required, Validators.minLength(4)]],
     });
   }
+  checkCaps(e: KeyboardEvent) {
+  this.capsOn = !!(e.getModifierState && e.getModifierState('CapsLock'));
+}
+togglePass() {
+  this.showPass = !this.showPass;
+}
 
   submit() {
     this.errorMsg = '';
@@ -54,7 +62,7 @@ export class Login {
       )
       .subscribe({
         next: () => {
-          this.router.navigateByUrl('/home');
+          this.router.navigateByUrl('/home/dashboard');
         },
         error: (err) => {
           this.errorMsg = 'Email ou senha inválidos.';

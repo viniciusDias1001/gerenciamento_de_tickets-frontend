@@ -4,10 +4,16 @@
   padding: 30px 20px;
 }
 
+.container {
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
 .custom-breadcrumb {
   background: transparent;
   padding-left: 0;
   margin-bottom: 0;
+  color: #6b7280;
 }
 
 .header {
@@ -19,15 +25,18 @@
 }
 
 .header-actions .btn {
-  border-radius: 6px;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
 }
 
 .filters-card,
 .table-card {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  border: 1px solid #e5dfd5;
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.06);
   margin-bottom: 16px;
+  background: #fff;
 }
 
 .filters {
@@ -38,15 +47,16 @@
 }
 
 .field label {
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 6px;
   display: block;
-  color: #333;
+  color: #1f2937;
 }
 
 .actions {
   display: flex;
   gap: 8px;
+  justify-content: flex-end;
 }
 
 .table-top {
@@ -55,49 +65,56 @@
   margin-bottom: 10px;
 }
 
-.tickets-table th {
-  font-weight: 700;
-  color: #333;
-  border-bottom: 1px solid #ddd;
-}
-
-.title {
-  font-weight: 700;
-  color: #222;
-}
-
-.sub {
-  font-size: .85rem;
-}
-
-.muted {
-  color: #666;
-}
+.muted { color: #6b7280; }
 
 .mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: .85rem;
-  color: #444;
+  color: #374151;
+  overflow-wrap: anywhere;
 }
 
+.tickets-table th {
+  font-weight: 800;
+  color: #111827;
+  border-bottom: 1px solid #e5dfd5;
+}
 
-.badge {
-  padding: 10px 10px;
+.title { font-weight: 800; color: #111827; }
+.sub { font-size: .85rem; }
+
+.ticket-link {
+  color: #0f172a;
+  text-decoration: none;
+}
+.ticket-link:hover { text-decoration: underline; }
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
   border-radius: 999px;
-  padding-bottom: 15px;
-  font-weight: 700;
+  font-weight: 800;
   font-size: .78rem;
   border: 1px solid rgba(0,0,0,.08);
+  line-height: 1;
+  white-space: nowrap;
 }
 
-
 .status.open { background: #e8f5e9; color: #2e7d32; }
-.status.progress { background: #fff8e1; color: #8a6d00;  text-align: center;}
+.status.progress { background: #fff8e1; color: #8a6d00; }
 .status.done { background: #e3f2fd; color: #0d47a1; }
 
-.priority.low { background: #f1f1f1; color: #444; }
+.priority.low { background: #f1f1f1; color: #374151; }
 .priority.medium { background: #fff3cd; color: #7a5d00; }
 .priority.high { background: #fdecea; color: #b42318; }
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 
 .pagination {
   display: flex;
@@ -106,28 +123,115 @@
   margin-top: 12px;
 }
 
+/* ===== desktop/mobile switch ===== */
+.desktop-only { display: block; }
+.mobile-only { display: none; }
 
-/* Responsivo */
-@media (max-width: 1100px) {
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-actions .btn {
+    width: 100%;
+  }
+
   .filters {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
+
   .actions {
-    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .actions button {
+    flex: 1 1 140px;
+  }
+
+  .desktop-only { display: none; }
+  .mobile-only { display: block; }
+
+  .ticket-card-item {
+    border: 1px solid #e5dfd5;
+    border-radius: 12px;
+    background: #fff;
+    padding: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.05);
+    margin-bottom: 12px;
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .pill-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .card-meta {
+    margin-top: 10px;
+    display: grid;
+    gap: 6px;
+  }
+
+  .card-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .card-actions .btn {
+    flex: 1 1 120px;
   }
 }
 
-.ticket-link {
-  color: #0d6efd;
-  text-decoration: none;
-  font-weight: 600;
-}
-.ticket-link:hover {
-  text-decoration: underline;
-}
-
-.btn-outline-primary {
-  font-size: 0.75rem;
-  padding: 4px 10px;
+/* ===== modal delete ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, .55);
+  z-index: 2000;
 }
 
+.modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 2001;
+  padding: 18px;
+}
+
+.modal-card {
+  width: min(520px, 100%);
+  background: #fff;
+  border: 1px solid #e5dfd5;
+  border-radius: 14px;
+  box-shadow: 0 18px 45px rgba(0,0,0,.25);
+  padding: 16px 16px 14px;
+}
+
+.modal-title {
+  margin: 0 0 8px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.modal-text {
+  margin: 0 0 14px;
+  color: #374151;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

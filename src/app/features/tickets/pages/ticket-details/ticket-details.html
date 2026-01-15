@@ -1,55 +1,90 @@
 <div class="ticket-page">
   <div class="ticket-card">
+
     <div class="top">
-      <div>
+      <div class="left">
         <h1>Ticket</h1>
-        <div class="muted mono" *ngIf="ticket"># {{ ticket.id }}</div>
+
+        <div class="id-row" *ngIf="ticket">
+          <span class="muted mono"># {{ ticket.id }}</span>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="copyId()">
+            Copiar ID
+          </button>
+        </div>
+
+        <div class="badges" *ngIf="ticket">
+          <span class="badge-pill status" [class.open]="ticket.status==='OPEN'"
+                                  [class.progress]="ticket.status==='IN_PROGRESS'"
+                                  [class.done]="ticket.status==='DONE'">
+            {{ statusLabel(ticket.status) }}
+          </span>
+
+          <span class="badge-pill priority" [class.low]="ticket.priority==='LOW'"
+                                     [class.medium]="ticket.priority==='MEDIUM'"
+                                     [class.high]="ticket.priority==='HIGH'">
+            {{ priorityLabel(ticket.priority) }}
+          </span>
+        </div>
+
+        <div class="dates muted" *ngIf="ticket">
+          Criado em {{ ticket.createdAt | date:'dd/MM/yyyy HH:mm' }}
+          <span class="sep">•</span>
+          Atualizado em {{ ticket.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+        </div>
       </div>
 
       <div class="actions" *ngIf="ticket">
-        <a class="btn btn-outline-secondary" [routerLink]="['/home/tickets', ticket.id, 'history']">Histórico</a>
-        <a class="btn btn-primary" [routerLink]="['/home/tickets', ticket.id, 'manage']">Gerenciar</a>
+        <a class="btn btn-outline-secondary" [routerLink]="['/home/tickets', ticket.id, 'history']">
+          Histórico
+        </a>
+
+        <!-- ideal: só quem pode gerenciar -->
+        <a class="btn btn-primary" *ngIf="canManage" [routerLink]="['/home/tickets', ticket.id, 'manage']">
+          Gerenciar
+        </a>
+
+        <a class="btn btn-outline-secondary" routerLink="/home/dashboard">
+          Voltar
+        </a>
       </div>
     </div>
 
-    <div *ngIf="loading" class="muted">Carregando...</div>
+    <!-- Loading skeleton -->
+    <div class="skeleton" *ngIf="loading">
+      <div class="sk-line w-60"></div>
+      <div class="sk-grid">
+        <div class="sk-box" *ngFor="let _ of [1,2,3,4,5,6]">
+          <div class="sk-line w-40"></div>
+          <div class="sk-line w-80"></div>
+        </div>
+      </div>
+    </div>
+
     <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
 
-    <div *ngIf="ticket" class="grid">
-      <div class="box">
+    <div *ngIf="ticket && !loading" class="grid">
+      <div class="box full">
         <div class="label">Título</div>
         <div class="value">{{ ticket.title }}</div>
       </div>
 
       <div class="box">
-        <div class="label">Status</div>
-        <div class="value">{{ ticket.status }}</div>
-      </div>
-
-      <div class="box">
-        <div class="label">Prioridade</div>
-        <div class="value">{{ ticket.priority }}</div>
-      </div>
-
-      <div class="box">
         <div class="label">Criado por</div>
-        <div class="value">{{ ticket.createdBy?.name }}</div>
+        <div class="value">{{ ticket.createdBy?.name || '-' }}</div>
+        <div class="muted small">{{ ticket.createdBy?.email || '' }}</div>
       </div>
 
       <div class="box">
         <div class="label">Responsável</div>
         <div class="value">{{ ticket.assignedTo?.name || 'Não atribuído' }}</div>
+        <div class="muted small">{{ ticket.assignedTo?.email || '' }}</div>
       </div>
 
       <div class="box full">
         <div class="label">Descrição</div>
-        <div class="value">{{ ticket.description }}</div>
+        <div class="value desc">{{ ticket.description || '-' }}</div>
       </div>
     </div>
 
-    <div class="footer-actions">
-      <a class="btn btn-warning" routerLink="/home/tickets">Voltar</a>
-    </div>
   </div>
 </div>
-

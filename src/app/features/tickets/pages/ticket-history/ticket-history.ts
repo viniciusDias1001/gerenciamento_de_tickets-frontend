@@ -10,7 +10,7 @@ import { PageResponse, TicketHistory, TicketStatus } from '../../../../core/mode
   standalone: true,
   imports: [CommonModule],
   templateUrl: './ticket-history.html',
-  styleUrl: './ticket-history.scss',
+  styleUrls: ['./ticket-history.scss'],
 })
 export class TicketHistoryComponent implements OnInit {
   private route = inject(ActivatedRoute);

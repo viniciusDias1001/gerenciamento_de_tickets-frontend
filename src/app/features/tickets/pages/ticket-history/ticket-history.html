@@ -2,7 +2,7 @@
   <div class="container">
 
     <div class="header">
-      <div>
+      <div class="header-text">
         <h1 class="mt-4">Histórico</h1>
         <ol class="breadcrumb mb-4 custom-breadcrumb">
           <li class="breadcrumb-item active">
@@ -12,7 +12,9 @@
       </div>
 
       <div class="header-actions">
-        <a class="btn btn-outline-secondary" (click)="back()">Voltar</a>
+        <button class="btn btn-outline-secondary" type="button" (click)="back()">
+          Voltar
+        </button>
       </div>
     </div>
 
@@ -22,16 +24,25 @@
       <div class="card-body">
 
         <div class="table-top">
-          <div *ngIf="page">
-            <span class="muted">
-              Total: <b>{{ page.totalElements }}</b> • Página <b>{{ page.number + 1 }}</b> de <b>{{ page.totalPages }}</b>
-            </span>
+          <div *ngIf="page" class="muted">
+            Total: <b>{{ page.totalElements }}</b> • Página <b>{{ page.number + 1 }}</b> de <b>{{ page.totalPages }}</b>
           </div>
 
           <div class="muted" *ngIf="loading">Carregando...</div>
         </div>
 
-        <div class="timeline" *ngIf="page">
+        <!-- Loading Skeleton simples -->
+        <div class="skeleton" *ngIf="loading">
+          <div class="sk-row" *ngFor="let _ of [1,2,3,4,5]">
+            <div class="sk-dot"></div>
+            <div class="sk-box">
+              <div class="sk-line w-40"></div>
+              <div class="sk-line w-70"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline" *ngIf="page && !loading">
           <div class="event" *ngFor="let h of page.content">
             <div class="rail">
               <span class="dot"></span>
@@ -41,16 +52,19 @@
             <div class="content">
               <div class="top">
                 <div class="action">
-                  <span class="pill">{{ actionLabel(h.action) }}</span>
+                  <span class="pill action-pill">{{ actionLabel(h.action) }}</span>
 
                   <span class="arrow" *ngIf="h.fromStatus || h.toStatus">
-                    {{ statusLabel(h.fromStatus) }} → {{ statusLabel(h.toStatus) }}
+                    <span class="pill status-pill">{{ statusLabel(h.fromStatus) }}</span>
+                    <span class="arrow-mid">→</span>
+                    <span class="pill status-pill">{{ statusLabel(h.toStatus) }}</span>
                   </span>
                 </div>
 
                 <div class="meta muted">
                   <b>{{ h.performedBy.name || '-' }}</b>
-                  • {{ h.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  <span class="sep">•</span>
+                  {{ h.createdAt | date:'dd/MM/yyyy HH:mm' }}
                 </div>
               </div>
 
@@ -65,7 +79,7 @@
           </div>
         </div>
 
-        <div class="pagination" *ngIf="page">
+        <div class="pagination" *ngIf="page && !loading">
           <button class="btn btn-outline-secondary" (click)="prev()" [disabled]="page.first || loading">
             ◀ Anterior
           </button>
@@ -80,4 +94,3 @@
 
   </div>
 </div>
-
