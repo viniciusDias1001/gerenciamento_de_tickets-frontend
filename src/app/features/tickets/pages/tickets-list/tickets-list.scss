@@ -1,0 +1,133 @@
+.tickets-page {
+  background: #f5f2ea;
+  min-height: calc(100vh - 120px);
+  padding: 30px 20px;
+}
+
+.custom-breadcrumb {
+  background: transparent;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.header-actions .btn {
+  border-radius: 6px;
+}
+
+.filters-card,
+.table-card {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  margin-bottom: 16px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr .8fr .4fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.field label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #333;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.table-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.tickets-table th {
+  font-weight: 700;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+}
+
+.title {
+  font-weight: 700;
+  color: #222;
+}
+
+.sub {
+  font-size: .85rem;
+}
+
+.muted {
+  color: #666;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: .85rem;
+  color: #444;
+}
+
+
+.badge {
+  padding: 10px 10px;
+  border-radius: 999px;
+  padding-bottom: 15px;
+  font-weight: 700;
+  font-size: .78rem;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+
+.status.open { background: #e8f5e9; color: #2e7d32; }
+.status.progress { background: #fff8e1; color: #8a6d00;  text-align: center;}
+.status.done { background: #e3f2fd; color: #0d47a1; }
+
+.priority.low { background: #f1f1f1; color: #444; }
+.priority.medium { background: #fff3cd; color: #7a5d00; }
+.priority.high { background: #fdecea; color: #b42318; }
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+
+/* Responsivo */
+@media (max-width: 1100px) {
+  .filters {
+    grid-template-columns: 1fr 1fr;
+  }
+  .actions {
+    justify-content: flex-start;
+  }
+}
+
+.ticket-link {
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 600;
+}
+.ticket-link:hover {
+  text-decoration: underline;
+}
+
+.btn-outline-primary {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+}
+

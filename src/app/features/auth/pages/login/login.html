@@ -1,0 +1,32 @@
+<div class="auth-card">
+  <h2>Entrar</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label>Email</label>
+    <input type="email" formControlName="email" />
+
+    <small class="hint"
+      *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+      Informe um email válido
+    </small>
+
+    <label>Senha</label>
+    <input type="password" formControlName="password" />
+
+    <small class="hint"
+      *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+      Informe a senha
+    </small>
+
+    <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+    <button type="submit" [disabled]="loading || form.invalid">
+      {{ loading ? 'Entrando...' : 'Entrar' }}
+    </button>
+  </form>
+
+  <div class="links">
+    <a routerLink="/auth/register">Criar conta</a>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+<div class="sb-nav-fixed">
+  <!-- TOP NAV -->
+  <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <a class="navbar-brand" routerLink="/home">Ticket-Management</a>
+
+    <button
+      class="btn btn-link btn-sm order-1 order-lg-0"
+      id="sidebarToggle"
+      type="button"
+      (click)="toggleSidebar()"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+  </nav>
+
+  <div id="layoutSidenav">
+    <!-- SIDEBAR -->
+    <div id="layoutSidenav_nav">
+      <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+          <div class="nav">
+
+            <!-- SISTEMA -->
+            <div class="sb-sidenav-menu-heading">Sistema</div>
+
+            <a class="nav-link" routerLink="/home">
+              <div class="sb-nav-link-icon">
+                <i class="fas fa-tachometer-alt"></i>
+              </div>
+              Home
+            </a>
+
+            <div class="sb-sidenav-menu-heading">Tickets</div>
+
+            <a class="nav-link" routerLink="/home/tickets">
+              <div class="sb-nav-link-icon">
+                <i class="fas fa-ticket-alt"></i>
+              </div>
+              Meus Tickets
+            </a>
+
+            <a
+              class="nav-link"
+              routerLink="/home/tickets/novo"
+              *ngIf="isClient || isAdmin"
+            >
+              <div class="sb-nav-link-icon">
+                <i class="fas fa-plus"></i>
+              </div>
+              Novo Ticket
+            </a>
+
+            <!-- ADMIN -->
+            <div class="sb-sidenav-menu-heading" *ngIf="isAdmin">
+              Administração
+            </div>
+
+            <a class="nav-link" routerLink="/home/usuarios" *ngIf="isAdmin">
+              <div class="sb-nav-link-icon">
+                <i class="fas fa-users-cog"></i>
+              </div>
+              Usuários
+            </a>
+
+            <!-- LOGOUT -->
+            <div class="sb-sidenav-menu-heading">Logout</div>
+
+            <a class="nav-link" href="#" (click)="sair()">
+              <div class="sb-nav-link-icon">
+                <i class="fas fa-sign-out-alt"></i>
+              </div>
+              Sair do Sistema
+            </a>
+
+          </div>
+        </div>
+
+        <!-- FOOTER SIDEBAR -->
+        <div class="sb-sidenav-footer">
+          <div class="small">Logado como</div>
+          <div>Nome: {{ usuarioLogado }}</div>
+          <div class="small" style="opacity: .8">Perfil: {{ role }}</div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div id="layoutSidenav_content">
+      <main class="content">
+        <router-outlet></router-outlet>
+      </main>
+
+      <footer class="app-footer">
+        <div class="footer-inner">
+          <div class="text-muted">
+            Copyright &copy; Pedro Vinicius 2026
+          </div>
+          <div>
+            <a href="#">Privacy Policy</a>
+            &middot;
+            <a href="#">Terms &amp; Conditions</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,83 @@
+<div class="history-page">
+  <div class="container">
+
+    <div class="header">
+      <div>
+        <h1 class="mt-4">Histórico</h1>
+        <ol class="breadcrumb mb-4 custom-breadcrumb">
+          <li class="breadcrumb-item active">
+            Timeline do ticket <span class="mono">{{ ticketId }}</span>
+          </li>
+        </ol>
+      </div>
+
+      <div class="header-actions">
+        <a class="btn btn-outline-secondary" (click)="back()">Voltar</a>
+      </div>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+    <div class="card timeline-card">
+      <div class="card-body">
+
+        <div class="table-top">
+          <div *ngIf="page">
+            <span class="muted">
+              Total: <b>{{ page.totalElements }}</b> • Página <b>{{ page.number + 1 }}</b> de <b>{{ page.totalPages }}</b>
+            </span>
+          </div>
+
+          <div class="muted" *ngIf="loading">Carregando...</div>
+        </div>
+
+        <div class="timeline" *ngIf="page">
+          <div class="event" *ngFor="let h of page.content">
+            <div class="rail">
+              <span class="dot"></span>
+              <span class="line"></span>
+            </div>
+
+            <div class="content">
+              <div class="top">
+                <div class="action">
+                  <span class="pill">{{ actionLabel(h.action) }}</span>
+
+                  <span class="arrow" *ngIf="h.fromStatus || h.toStatus">
+                    {{ statusLabel(h.fromStatus) }} → {{ statusLabel(h.toStatus) }}
+                  </span>
+                </div>
+
+                <div class="meta muted">
+                  <b>{{ h.performedBy.name || '-' }}</b>
+                  • {{ h.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                </div>
+              </div>
+
+              <div class="notes" *ngIf="h.notes">
+                {{ h.notes }}
+              </div>
+            </div>
+          </div>
+
+          <div class="empty muted text-center py-4" *ngIf="page.content.length === 0">
+            Nenhum evento no histórico.
+          </div>
+        </div>
+
+        <div class="pagination" *ngIf="page">
+          <button class="btn btn-outline-secondary" (click)="prev()" [disabled]="page.first || loading">
+            ◀ Anterior
+          </button>
+
+          <button class="btn btn-outline-secondary" (click)="next()" [disabled]="page.last || loading">
+            Próxima ▶
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+

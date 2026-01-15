@@ -1,0 +1,168 @@
+<div class="manage-page">
+  <div class="manage-card">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div>
+        <h1 class="title">Gerenciar Ticket</h1>
+        <p class="subtitle">Alterar status e atribuir responsável (TECH/ADMIN)</p>
+      </div>
+
+      <button class="btn btn-outline" type="button" (click)="back()">
+        Voltar
+      </button>
+    </div>
+
+    <!-- MENSAGENS -->
+    <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+    <div class="alert alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+
+    <!-- LOADING -->
+    <div class="loading" *ngIf="loading">Carregando...</div>
+
+    <!-- DADOS DO TICKET -->
+    <div *ngIf="ticket" class="ticket-info">
+      <div class="row">
+        <div class="box">
+          <div class="label">ID</div>
+          <div class="value mono">{{ ticket.id }}</div>
+        </div>
+
+        <div class="box">
+          <div class="label">Status atual</div>
+          <div class="value">{{ ticket.status }}</div>
+        </div>
+
+        <div class="box">
+          <div class="label">Prioridade</div>
+          <div class="value">{{ ticket.priority }}</div>
+        </div>
+      </div>
+
+      <div class="box full">
+        <div class="label">Título</div>
+        <div class="value">{{ ticket.title }}</div>
+      </div>
+
+      <div class="box full">
+        <div class="label">Descrição</div>
+        <div class="value desc">{{ ticket.description }}</div>
+      </div>
+
+      <div class="box full">
+        <div class="label">Responsável atual</div>
+        <div class="value">{{ currentTechLabel() }}</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- FORMULÁRIO -->
+    <form [formGroup]="form" class="actions-grid">
+
+      <!-- STATUS -->
+      <div class="action-card">
+        <h2>Status</h2>
+        <p class="hint">Selecione o novo status do ticket.</p>
+
+        <label>Novo status</label>
+        <select class="form-control" formControlName="status" [disabled]="loading">
+          <option *ngFor="let s of statusOptions" [value]="s.value">
+            {{ s.label }}
+          </option>
+        </select>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveStatus()"
+          [disabled]="savingStatus || loading"
+        >
+          {{ savingStatus ? 'Salvando...' : 'Salvar status' }}
+        </button>
+      </div>
+
+      <!-- ATRIBUIR -->
+      <div class="action-card">
+        <h2>Atribuir responsável</h2>
+        <p class="hint">Selecione um técnico.</p>
+
+        <label>Técnico</label>
+        <select
+          class="form-control"
+          formControlName="techId"
+          [disabled]="loadingTechs || loading"
+        >
+          <option value="">
+            {{ loadingTechs ? 'Carregando técnicos...' : 'Selecione um técnico' }}
+          </option>
+
+          <option *ngFor="let u of techUsers" [value]="u.id">
+            {{ u.name }} — {{ u.email }}
+          </option>
+        </select>
+
+        <small
+          class="error"
+          *ngIf="form.get('techId')?.touched && form.get('techId')?.invalid"
+        >
+          Selecione um técnico.
+        </small>
+
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="assignTech()"
+          [disabled]="assigning || loading || loadingTechs"
+        >
+          {{ assigning ? 'Atribuindo...' : 'Atribuir' }}
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<!-- ========================= -->
+<!-- MODAL DE CONFIRMAÇÃO -->
+<!-- ========================= -->
+
+<div
+  class="modal-backdrop"
+  *ngIf="confirmOpen"
+  (click)="confirmNo()"
+></div>
+
+<div
+  class="modal"
+  *ngIf="confirmOpen"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <h3 class="modal-title">{{ confirmTitle }}</h3>
+
+    <p class="modal-text">
+      {{ confirmMessage }}
+    </p>
+
+    <div class="modal-actions">
+      <button
+        type="button"
+        class="btn btn-outline"
+        (click)="confirmNo()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="confirmYes()"
+      >
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>

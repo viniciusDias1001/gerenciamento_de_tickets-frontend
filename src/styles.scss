@@ -1,1 +1,234 @@
-/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* =========================
+   AUTH (login / register)
+========================= */
+.auth-card {
+  background: #fff3d6;
+  border: 1px solid #e3c27d;
+  border-radius: 3px;
+  padding: 18px;
+  max-width: 380px;
+  margin: 40px auto;
+}
+
+.auth-card h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.auth-card label {
+  display: block;
+  font-weight: 600;
+  margin: 10px 0 6px;
+  font-size: 13px;
+}
+
+.auth-card input,
+.auth-card select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cfcfcf;
+  border-radius: 2px;
+}
+
+.auth-card button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  border: 1px solid #bbb;
+  background: #efefef;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.auth-card .error {
+  margin-top: 10px;
+  color: #b00020;
+}
+
+/* =========================
+   LAYOUT BASE
+========================= */
+.sb-nav-fixed {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   TOP NAV (FIXA)
+========================= */
+.sb-topnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  z-index: 2000;
+}
+
+.sb-topnav .navbar-brand {
+  margin-left: 8px;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/* =========================
+   WRAPPER SIDEBAR + CONTENT
+========================= */
+#layoutSidenav {
+  display: flex;
+  flex: 1;
+  padding-top: 56px; /* espaço da topbar */
+}
+
+/* =========================
+   SIDEBAR FIXA
+========================= */
+#layoutSidenav_nav {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 225px;
+  height: calc(100vh - 56px);
+  background-color: #212529;
+  overflow-y: auto;
+  transition: transform 0.2s ease-in-out;
+  z-index: 1050;
+}
+
+/* =========================
+   CONTEÚDO
+========================= */
+#layoutSidenav_content {
+  margin-left: 225px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 56px);
+  background: #f4efe7;
+  min-width: 0;
+}
+
+/* MAIN */
+.content {
+  flex: 1;
+  padding: 18px 22px;
+  min-width: 0;
+}
+
+/* remove container central do bootstrap */
+#layoutSidenav_content .container,
+#layoutSidenav_content .container-fluid {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* =========================
+   SIDENAV
+========================= */
+.sb-sidenav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sb-sidenav-dark {
+  background-color: #212529;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sb-sidenav-menu {
+  flex-grow: 1;
+}
+
+.sb-sidenav-menu .nav {
+  flex-direction: column;
+}
+
+.sb-sidenav-menu-heading {
+  padding: 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.06em;
+}
+
+/* LINKS */
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+.sb-nav-link-icon {
+  margin-right: 0.5rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* SIDEBAR FOOTER */
+.sb-sidenav-footer {
+  padding: 0.75rem;
+  background-color: #343a40;
+  color: rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =========================
+   FOOTER APP
+========================= */
+.app-footer {
+  background: #f8f9fa;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 22px;
+  font-size: 12px;
+}
+
+/* =========================
+   TOGGLE SIDEBAR
+========================= */
+body.sb-sidenav-toggled #layoutSidenav_nav {
+  transform: translateX(-225px);
+}
+
+body.sb-sidenav-toggled #layoutSidenav_content {
+  margin-left: 0;
+}
+/* =========================
+   RESPONSIVO — NÃO ESCONDER SIDEBAR AUTOMATICAMENTE
+========================= */
+@media (max-width: 992px) {
+  #layoutSidenav_nav {
+    transform: translateX(0);   /* 🔥 mantém visível */
+  }
+
+  #layoutSidenav_content {
+    margin-left: 225px;         /* 🔥 mantém espaço da sidebar */
+  }
+
+  body.sb-sidenav-toggled #layoutSidenav_nav {
+    transform: translateX(-225px); /* só fecha se clicar */
+  }
+
+  body.sb-sidenav-toggled #layoutSidenav_content {
+    margin-left: 0;
+  }
+}

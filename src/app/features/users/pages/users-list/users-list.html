@@ -1,0 +1,119 @@
+<div class="tickets-page">
+  <div class="container">
+
+    <div class="header">
+      <div>
+        <h1 class="mt-4">Usuários</h1>
+        <ol class="breadcrumb mb-4 custom-breadcrumb">
+          <li class="breadcrumb-item active">Administração de usuários</li>
+        </ol>
+      </div>
+    </div>
+
+    <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+    <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+
+    <div class="card filters-card">
+      <div class="card-body">
+        <form [formGroup]="form" (ngSubmit)="applyFilters()" class="filters">
+
+          <div class="field">
+            <label>Perfil</label>
+            <select class="form-control" formControlName="role">
+              <option value="">Todos</option>
+              <option value="ADMIN">Admin</option>
+              <option value="TECH">Técnico</option>
+              <option value="CLIENT">Cliente</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Por página</label>
+            <input class="form-control" type="number" min="1" max="100" formControlName="size" />
+          </div>
+
+          <div class="header-actions">
+            <button class="btn btn-primary" type="submit" [disabled]="loading">Filtrar</button>
+            <button class="btn btn-outline-secondary" type="button" (click)="clearFilters()" [disabled]="loading">
+              Limpar
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+      <div *ngIf="page">
+        Total: {{ page.totalElements }} • Página {{ page.number + 1 }} de {{ page.totalPages }}
+      </div>
+      <div *ngIf="loading">Carregando...</div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+
+        <table class="table table-hover align-middle" *ngIf="page; else loadingTpl">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Perfil</th>
+              <th style="width: 140px;">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let u of page.content">
+              <td>
+                <div class="fw-semibold">{{ u.name }}</div>
+                <div class="text-muted small">{{ u.id }}</div>
+              </td>
+
+              <td>{{ u.email }}</td>
+
+              <td>
+                <span class="badge rounded-pill bg-light text-dark">
+                  {{ roleLabel(u.role) }}
+                </span>
+              </td>
+
+              <td>
+                <button
+                  *ngIf="canDelete(u)"
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="confirmDelete(u)"
+                  [disabled]="loading"
+                  title="Deletar usuário"
+                >
+                  🗑 Deletar
+                </button>
+
+                <span *ngIf="!canDelete(u)" class="text-muted">—</span>
+              </td>
+            </tr>
+
+            <tr *ngIf="page.content.length === 0">
+              <td colspan="4" class="text-center text-muted">
+                Nenhum usuário encontrado.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ng-template #loadingTpl>
+          <div class="text-muted" *ngIf="loading">Carregando usuários...</div>
+          <div class="text-muted" *ngIf="!loading && !page">Sem dados.</div>
+        </ng-template>
+
+        <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="page">
+          <button class="btn btn-outline-secondary" (click)="prev()" [disabled]="page.first || loading">◀ Anterior</button>
+          <span class="text-muted">Página {{ page.number + 1 }} / {{ page.totalPages }}</span>
+          <button class="btn btn-outline-secondary" (click)="next()" [disabled]="page.last || loading">Próxima ▶</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

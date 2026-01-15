@@ -1,0 +1,55 @@
+<div class="ticket-page">
+  <div class="ticket-card">
+    <div class="top">
+      <div>
+        <h1>Ticket</h1>
+        <div class="muted mono" *ngIf="ticket"># {{ ticket.id }}</div>
+      </div>
+
+      <div class="actions" *ngIf="ticket">
+        <a class="btn btn-outline-secondary" [routerLink]="['/home/tickets', ticket.id, 'history']">Histórico</a>
+        <a class="btn btn-primary" [routerLink]="['/home/tickets', ticket.id, 'manage']">Gerenciar</a>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="muted">Carregando...</div>
+    <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+
+    <div *ngIf="ticket" class="grid">
+      <div class="box">
+        <div class="label">Título</div>
+        <div class="value">{{ ticket.title }}</div>
+      </div>
+
+      <div class="box">
+        <div class="label">Status</div>
+        <div class="value">{{ ticket.status }}</div>
+      </div>
+
+      <div class="box">
+        <div class="label">Prioridade</div>
+        <div class="value">{{ ticket.priority }}</div>
+      </div>
+
+      <div class="box">
+        <div class="label">Criado por</div>
+        <div class="value">{{ ticket.createdBy?.name }}</div>
+      </div>
+
+      <div class="box">
+        <div class="label">Responsável</div>
+        <div class="value">{{ ticket.assignedTo?.name || 'Não atribuído' }}</div>
+      </div>
+
+      <div class="box full">
+        <div class="label">Descrição</div>
+        <div class="value">{{ ticket.description }}</div>
+      </div>
+    </div>
+
+    <div class="footer-actions">
+      <a class="btn btn-warning" routerLink="/home/tickets">Voltar</a>
+    </div>
+  </div>
+</div>
+

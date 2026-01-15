@@ -1,0 +1,138 @@
+.history-page {
+  background: #f6f2e8; // bege “Redmine”
+  min-height: 100%;
+  padding: 24px 0;
+}
+
+.container {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.custom-breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin: 6px 0 0;
+}
+
+.muted {
+  color: #6c757d;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9rem;
+}
+
+.timeline-card {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+.table-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.timeline {
+  position: relative;
+  padding: 8px 4px 4px;
+}
+
+.event {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 14px;
+  padding: 14px 0;
+}
+
+.rail {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #3a5b7a;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(58, 91, 122, .25);
+  position: relative;
+  z-index: 2;
+  margin-top: 3px;
+}
+
+.line {
+  position: absolute;
+  top: 18px;
+  bottom: -14px;
+  width: 2px;
+  background: rgba(0,0,0,.12);
+  z-index: 1;
+}
+
+.event:last-child .line {
+  display: none;
+}
+
+.content {
+  border: 1px solid rgba(0,0,0,.08);
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-block;
+  font-size: .75rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(58, 91, 122, .12);
+  color: #2f4f6a;
+  font-weight: 600;
+}
+
+.arrow {
+  font-size: .9rem;
+  color: #333;
+}
+
+.notes {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(0,0,0,.12);
+  color: #333;
+}
+
+.pagination {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 12px;
+}
